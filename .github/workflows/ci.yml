@@ -61,18 +61,15 @@ jobs:
             - name: Cache Node.js modules
               uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
               with:
-                path: frontend/node_modules
+                path: ~/.npm
                 key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
                 restore-keys: |
                   ${{ runner.os }}-node-
             
             - name: Install frontend dependencies
-              run: |
-                  cd frontend
-                  npm ci
+              working-directory: frontend
+              run: npm ci
             
             - name: Run frontend tests
-              run: |
-                  cd frontend
-                  npm test -- --watchAll=false
-
+              working-directory: frontend
+              run: npm test -- --watchAll=false

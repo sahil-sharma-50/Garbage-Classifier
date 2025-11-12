@@ -30,7 +30,9 @@ app.add_middleware(
 )
 
 # Load the saved model (HDF5 or SavedModel)
-model = load_model("garbage_classifier.keras")
+model_path = os.path.join(os.path.dirname(__file__), "garbage_classifier.keras")
+model = load_model(model_path)
+
 class_names = [
     "Battery",
     "Biological",
