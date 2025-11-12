@@ -42,7 +42,7 @@ jobs:
                   sleep 10
 
                   # Test the endpoint
-                  curl -f http://localhost:8000/predict || (cat uvicorn.log && exit 1)
+                  curl -f -X POST -F "file=@test_images/apple.jpg" http://localhost:8000/predict || (cat uvicorn.log && exit 1)
                   
                   # Kill the FastAPI server
                   kill $SERVER_PID
