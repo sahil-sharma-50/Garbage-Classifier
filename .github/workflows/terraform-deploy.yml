@@ -39,13 +39,6 @@ jobs:
         working-directory: infra
         run: terraform apply -var-file="env/dev.tfvars" -auto-approve
 
-      - name: Get Terraform Outputs
-        working-directory: infra
-        id: tf
-        run: |
-          echo "FRONTEND_DNS=$(terraform output -raw frontend_alb_dns)" >> $GITHUB_ENV
-          echo "BACKEND_DNS=$(terraform output -raw backend_alb_dns)" >> $GITHUB_ENV
-
       - name: Run smoke tests
         run: |
           echo "Testing Frontend at $FRONTEND_DNS"
