@@ -27,7 +27,10 @@ function App() {
     formData.append("file", file);
 
     try {
-      const res = await axios.post("http://192.168.178.86:8000/predict", formData, {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      console.log("Using backend URL:");
+      console.log(backendUrl);
+      const res = await axios.post(`${backendUrl}/predict`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setResult(res.data);

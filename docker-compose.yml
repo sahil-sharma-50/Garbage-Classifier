@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
+    image: fastapi-backend:latest
     container_name: fastapi-backend
     ports:
       - "8000:8000"
@@ -13,6 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+    image: react-frontend:latest
     container_name: react-frontend
     ports:
       - "3000:80"

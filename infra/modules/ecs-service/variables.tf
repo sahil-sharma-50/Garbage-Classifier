@@ -1,0 +1,10 @@
+variable "app_name" { type = string }
+variable "region" { type = string }
+variable "environment" { type = string }
+variable "cluster_id" { type = string }
+variable "vpc_id" { type = string }
+variable "subnets" { type = list(string) }
+variable "docker_image_uri" { type = string }
+variable "container_port" { type = number }
+variable "listener_port" { type = number }
+variable "default_sg_id" { type = string }

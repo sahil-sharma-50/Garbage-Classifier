@@ -10,6 +10,10 @@ RUN npm install
 # Copy rest of the frontend source
 COPY frontend/ .
 
+# Pass backend URL as a build argument
+ARG REACT_APP_BACKEND_URL
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+
 # Build the React app
 RUN npm run build
 
