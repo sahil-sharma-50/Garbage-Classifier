@@ -29,6 +29,6 @@ jobs:
         run: |
           IMAGE="427058101105.dkr.ecr.eu-central-1.amazonaws.com/waste-classifier-repo:frontend-latest"
 
-          docker build -t frontend -f Dockerfile.frontend frontend/
+          docker build -t frontend -f Dockerfile.frontend .
           docker tag frontend:latest $IMAGE
           docker push $IMAGE
