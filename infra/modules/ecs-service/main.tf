@@ -4,16 +4,21 @@ data "aws_iam_role" "ecs_task_execution_role" {
 }
 
 # CloudWatch Log Group for ECS Task
-resource "aws_cloudwatch_log_group" "logs" {
+# resource "aws_cloudwatch_log_group" "logs" {
+#   name              = "/ecs/${var.app_name}-task"
+#   retention_in_days = 30
+# }
+
+data "aws_cloudwatch_log_group" "logs" {
   name              = "/ecs/${var.app_name}-task"
   retention_in_days = 30
 }
 
 # ECS Task Definition for frontend
 resource "aws_ecs_task_definition" "task" {
-  depends_on = [
-    aws_cloudwatch_log_group.logs
-  ]
+  # depends_on = [
+  #   aws_cloudwatch_log_group.logs
+  # ]
   family                    = "${var.app_name}-task"
   requires_compatibilities  = ["FARGATE"]
   runtime_platform {
@@ -40,10 +45,10 @@ resource "aws_ecs_task_definition" "task" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.logs.name
+          "awslogs-group"         = data.aws_cloudwatch_log_group.logs.name
           "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs"
-          "awslogs-create-group"  = "true"
+          # "awslogs-create-group"  = "true"
         }
       }
     },
@@ -52,41 +57,49 @@ resource "aws_ecs_task_definition" "task" {
 
 
 # Application Load Balancer
-resource "aws_lb" "alb" {
-  name               = "${var.app_name}-alb"
-  load_balancer_type = "application"
-  subnets            = var.subnets
-  # security_groups    = [aws_security_group.alb_sg.id]
-  security_groups    = [var.default_sg_id]
+# resource "aws_lb" "alb" {
+#   name               = "${var.app_name}-alb"
+#   load_balancer_type = "application"
+#   subnets            = var.subnets
+#   # security_groups    = [aws_security_group.alb_sg.id]
+#   security_groups    = [var.default_sg_id]
+# }
+
+data "aws_lb" "alb" {
+  name = "${var.app_name}-alb"
 }
 
 # Target Group for ECS
-resource "aws_lb_target_group" "tg" {
-  name        = "${var.app_name}-tg"
-  port        = var.container_port
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = var.vpc_id
+# resource "aws_lb_target_group" "tg" {
+#   name        = "${var.app_name}-tg"
+#   port        = var.container_port
+#   protocol    = "HTTP"
+#   target_type = "ip"
+#   vpc_id      = var.vpc_id
 
-  health_check {
-    path                = "/"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    matcher             = "200-399"
-  }
+#   health_check {
+#     path                = "/"
+#     interval            = 30
+#     timeout             = 5
+#     healthy_threshold   = 2
+#     unhealthy_threshold = 2
+#     matcher             = "200-399"
+#   }
+# }
+
+data "aws_lb_target_group" "tg" {
+  name = "${var.app_name}-tg"
 }
 
 # Listener for ALB
 resource "aws_lb_listener" "listener" {
-  load_balancer_arn = aws_lb.alb.arn
+  load_balancer_arn = data.aws_lb.alb.arn
   port              = var.listener_port
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tg.arn
+    target_group_arn = data.aws_lb_target_group.tg.arn
   }
 }
 
@@ -118,7 +131,7 @@ resource "aws_ecs_service" "service" {
   ]
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.tg.arn
+    target_group_arn = data.aws_lb_target_group.tg.arn
     container_name   = "${var.app_name}-container"
     container_port   = var.container_port
   }
