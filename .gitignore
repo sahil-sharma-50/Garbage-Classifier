@@ -1,5 +1,31 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Ignore override files that are local to a machine
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Sensitive variable files (if you have them)
+*.tfvars
+*.tfvars.json
+
+# Ignore editor directories (optional)
+.idea/
+.vscode/
+*.swp
+
 # dependencies
 /node_modules
 /.pnp
