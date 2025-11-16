@@ -54,3 +54,18 @@ jobs:
       - name: Terraform Apply
         working-directory: infra
         run: terraform apply -var-file="env/dev.tfvars" -auto-approve
+
+      # --- Force ECS to deploy the latest Docker image ---
+      - name: Force ECS frontend redeploy
+        run: |
+          aws ecs update-service \
+            --cluster waste-classifier-cluster \
+            --service frontend-service \
+            --force-new-deployment
+
+      - name: Force ECS backend redeploy
+        run: |
+          aws ecs update-service \
+            --cluster waste-classifier-cluster \
+            --service backend-service \
+            --force-new-deployment
