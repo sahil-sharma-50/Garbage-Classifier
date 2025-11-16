@@ -56,7 +56,7 @@ function App() {
 
       {/* Main Content */}
       <div className="content">
-        <h1 className="title">♻️ Waste Classifier for Germany 🇩🇪</h1>
+        <h1 className="title">♻️ Waste Classifier 🇩🇪</h1>
         <p className="subtitle">
           Upload an image to quickly identify the waste type and recommended bin.
         </p>
